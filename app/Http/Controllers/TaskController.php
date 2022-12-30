@@ -108,9 +108,9 @@ class TaskController extends Controller
      */
     public function filterable(FilterTask $request): JsonResponse
     {
-        //$data = $this->sanitizeTaskFilterData($request);
+        $data = $this->sanitizeTaskFilterData($request);
 
-        $query = Task::query();
+        /*$query = Task::query();
 
         $pipes = [
             FilterTaskStartDate::class,
@@ -122,7 +122,9 @@ class TaskController extends Controller
             ->send($query)
             ->through($pipes)
             ->thenReturn()
-            ->get();
+            ->get();*/
+
+        $value = Task::filterTask($data);
 
         return \response()->json(['message' => $value]);
     }

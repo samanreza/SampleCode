@@ -79,33 +79,53 @@ class Task extends Model
     }
 
     /**
-     * @param $data
+     * @param array $data
+     * @return \Illuminate\Database\Eloquent\Builder|\Illuminate\Support\HigherOrderWhenProxy|mixed
      */
-    static public function filterTask($data)
+    static public function filterTask(array $data)
     {
-            //
+           return self::query()->select([
+                self::COLUMN_TITLE,
+                self::COLUMN_DESCRIPTION,
+                self::COLUMN_CREATED_AT]
+            )->when($data['start_date'] ?? false,fn($query) => $query->filterByStartDate($data))
+            ->when($data['end_date'] ?? false,fn($query) => $query->filterByEndDate($data))
+            ->when($data['description'] ?? false,fn($query) => $query->filterByDescription($data));
     }
 
     /**
      * @param Builder $query
+     * @param array $filter
      * @return Builder
      */
-   public function scopeFilterByDate(Builder $query,array $filter):Builder
+   public function scopeFilterByStartDate(Builder $query,array $filter):Builder
     {
-        $query->when($filter['start_date'] ?? false , fn ($query,$start_date) =>
+        /*$query->when($filter['start_date'] ?? false , fn ($query,$start_date) =>
         $query
             ->whereDate('created_at','>=',$start_date)
-        );
+        );*/
+        return $query->where('created_at','>=',$filter['start_date']);
     }
 
     /**
      * @param Builder $query
+     * @param array $filter
      * @return Builder
      */
-    /*    public function scopeFilterByDescription(Builder $query):Builder
+    public function scopeFilterByEndDate(Builder $query,array $filter):Builder
     {
-        //
-    }*/
+        return $query->where('created_at', '<=',$filter['end_date']);
+    }
+
+    /**
+     * @param Builder $query
+     * @param array $filter
+     * @return Builder
+     */
+    public function scopeFilterByDescription(Builder $query,array $filter):Builder
+    {
+        return $query->where('description','like' ,'%'.$filter['description'].'%');
+    }
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
