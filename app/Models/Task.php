@@ -21,6 +21,63 @@ class Task extends Model
     const COLUMN_CREATED_AT = 'created_at';
     const COLUMN_UPDATED_AT = 'updated_at';
 
+
+    /**
+     *
+     */
+    protected static function boot()
+    {
+        parent::boot();
+
+        parent::created(fn(Task $task) => $task->onCreated());
+        parent::creating(fn(Task $task) => $task->onCreating());
+        parent::updated(fn(Task $task) => $task->onUpdated());
+        parent::updating(fn(Task $task) => $task->onUpdating());
+        parent::saved(fn(Task $task) => $task->onSaved());
+        parent::saving(fn(Task $task) => $task->onSaving());
+        parent::deleted(fn(Task $task) => $task->onDeleted());
+        parent::deleting(fn(Task $task) => $task->onDeleting());
+    }
+
+    public function onCreated()
+    {
+        //
+    }
+
+    public function onCreating()
+    {
+        //
+    }
+
+    public function onSaved()
+    {
+        //
+    }
+
+    public function onSaving()
+    {
+        //
+    }
+
+    public function onUpdated()
+    {
+        //
+    }
+
+    public function onUpdating()
+    {
+        //
+    }
+
+    public function onDeleted()
+    {
+        //
+    }
+
+    public function onDeleting()
+    {
+        //
+    }
     /**
      * @param string $value
      * @return $this
